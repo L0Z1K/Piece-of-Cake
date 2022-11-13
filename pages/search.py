@@ -15,7 +15,7 @@ layout = dbc.Container(
         dbc.Button(
             "Add to my chart",
             id="my-submit-button",
-            # href="/",
+            href="/",
             color="primary",
             className="ms-2",
             n_clicks=0,
@@ -23,16 +23,3 @@ layout = dbc.Container(
         html.Div(id="my-list"),
     ]
 )
-
-
-@callback(
-    Output("my-list", "children"),
-    Input("my-list", "children"),
-    State("my-output", "children"),
-    Input("my-submit-button", "n_clicks"),
-)
-def update_list(children, new_input, click):
-    if click:
-        return children + " " + new_input
-    else:
-        return children
