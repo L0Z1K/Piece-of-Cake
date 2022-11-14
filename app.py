@@ -3,7 +3,6 @@ import dash
 import dash_bootstrap_components as dbc
 from dash.exceptions import PreventUpdate
 
-from utils import search_bar
 from data import draw_chart
 
 app = Dash(
@@ -15,13 +14,39 @@ app = Dash(
 
 app.layout = html.Div(
     [
-        # dcc.Store(id="my-store", data={}),
+        dcc.Store(id="my-chart-list", data=[]),
+        dcc.Store(id="my-store", data=None),
         dcc.Location(id="url", refresh=False),
         # html.H1("Multi-page app with Dash Pages"),
         html.Div(
             [
                 dbc.NavbarSimple(
-                    children=[search_bar],
+                    children=[
+                        dbc.Row(
+                            [
+                                dbc.Col(
+                                    dbc.Input(
+                                        id="my-input",
+                                        type="search",
+                                        placeholder="Search",
+                                    )
+                                ),
+                                dbc.Col(
+                                    dbc.Button(
+                                        "Search",
+                                        id="my-button",
+                                        href="/search",
+                                        color="primary",
+                                        className="ms-2",
+                                        n_clicks=0,
+                                    ),
+                                    width="auto",
+                                ),
+                            ],
+                            className="g-0 ms-auto flex-nowrap mt-3 mt-md-0",
+                            align="center",
+                        )
+                    ],
                     brand="Piece of Cake",
                     brand_href="/",
                     color="light",
@@ -34,42 +59,15 @@ app.layout = html.Div(
 
 
 @app.callback(
-    Output("my-output", "children"),
-    Output("my-graph", "figure"),
-    Output("my-submit-button", "disabled"),
+    Output("my-store", "data"),
     State("my-input", "value"),
     Input("my-button", "n_clicks"),
 )
-def update_output_div(input_value, n_clicks):
+def update_search_key(input_value, n_clicks):
     if input_value is None:
-        return "", {}, True
-    input_value = input_value.upper()
-    fig = draw_chart(input_value)
-    if fig is None:
-        return f"{input_value} not found", {}, True
+        return ""
     else:
-        return input_value, fig, False
-
-
-@app.callback(
-    Output("my-list", "options"),
-    # State("my-output", "children"),
-    [State("my-list", "options")],
-    [Input("my-submit-button", "n_clicks")],
-)
-def update_list(existing_options, n_clicks):
-    print(n_clicks, existing_options)
-    option_name = "Option {}".format(n_clicks)
-    existing_options.append({"label": option_name, "value": option_name})
-    return existing_options
-    # if click:
-    #     print(new_input, my_list, click)
-    #     if my_list is None:
-    #         my_list = [{"label": new_input, "value": new_input}]
-    #     my_list.append({"label": new_input, "value": new_input})
-    #     return my_list
-    # else:
-    #     raise PreventUpdate
+        return input_value.upper()
 
 
 if __name__ == "__main__":

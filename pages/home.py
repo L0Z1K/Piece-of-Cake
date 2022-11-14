@@ -27,9 +27,21 @@ layout = dbc.Container(
             ]
         ),
         # dcc.Graph(id="my-whole-graph", figure={}),
-        dcc.Dropdown(id="my-list", options=[], value=None, clearable=False, multi=True),
+        dcc.Dropdown(
+            id="my-list",
+            options=[],
+            value=None,
+            clearable=False,
+            multi=True,
+        ),
     ]
 )
+
+
+@callback(Output("my-list", "options"), Input("my-chart-list", "data"))
+def update_chart_list(chart_list):
+    print(chart_list)
+    return chart_list
 
 
 @callback(
