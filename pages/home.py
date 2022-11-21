@@ -38,10 +38,13 @@ layout = dbc.Container(
 )
 
 
-@callback(Output("my-list", "options"), Input("my-chart-list", "data"))
+@callback(
+    Output("my-list", "options"),
+    Output("my-list", "value"),
+    Input("my-chart-list", "data"),
+)
 def update_chart_list(chart_list):
-    print(chart_list)
-    return chart_list
+    return chart_list, [x["value"] for x in chart_list]
 
 
 @callback(
