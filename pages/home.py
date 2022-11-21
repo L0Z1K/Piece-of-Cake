@@ -8,6 +8,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 
 from data import draw_charts
+from utils import buying_calculate
 
 dash.register_page(__name__, path="/")
 
@@ -17,12 +18,12 @@ layout = dbc.Container(
         dcc.Tabs(
             [
                 dcc.Tab(
-                    label="Draw by One",
-                    children=[dcc.Graph(id="whole-graph", figure={})],
-                ),
-                dcc.Tab(
                     label="Draw by individual",
                     children=[dcc.Graph(id="individual-graph", figure={})],
+                ),
+                dcc.Tab(
+                    label="Draw by One",
+                    children=[dcc.Graph(id="whole-graph", figure={})],
                 ),
             ]
         ),
@@ -56,6 +57,7 @@ layout = dbc.Container(
                                 placeholder="How much cash do you have?",
                                 style={"width": "100%"},
                             ),
+                            html.Div(id="buying-result", children=[]),
                         ]
                     ),
                     id="offcanvas",
@@ -101,3 +103,47 @@ def toggle_offcanvas(n1, is_open):
     if n1:
         return not is_open
     return is_open
+
+
+def make_receipt(result):
+    card_content = [
+        dbc.Row(
+            [
+                dbc.Col(
+                    html.H4(children=key),
+                    width=3,
+                    # style={"width": "30%"},
+                ),
+                dbc.Col(
+                    html.H4(
+                        children=value,
+                        style={"text-align": "right"},
+                    ),
+                    width=7,
+                    # style={"width": "70%"},
+                ),
+            ],
+            justify="between",
+        )
+        for key, value in result.items()
+    ]
+    return dbc.Card(
+        [
+            dbc.CardHeader("Result"),
+            dbc.CardBody(card_content),
+        ],
+        style={"margin": "10px"},
+    )
+
+
+@callback(
+    Output("buying-result", "children"),
+    Input("cash", "value"),
+    Input("my-list", "value"),
+)
+def update_buying_result(cash, input_values):
+    if cash is None or input_values is None:
+        raise PreventUpdate
+    else:
+        result = buying_calculate(cash, input_values)
+        return make_receipt(result)
