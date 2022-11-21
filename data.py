@@ -34,10 +34,11 @@ def draw_charts(tickers, ratio=None):
         df = df.merge(hist[["Date", ticker]], on="Date", how="left")
         fig1.add_trace(go.Scatter(x=hist.Date, y=hist[ticker], name=ticker))
     if ratio is None:
-        df.set_index("Date", inplace=True)
-        # should be changed when ratio comes in.
-        df = df.interpolate("linear", limit_direction="both").mean(axis=1)
-        fig2.add_trace(go.Scatter(x=df.index, y=df))
+        if len(tickers) >= 1:
+            df.set_index("Date", inplace=True)
+            # should be changed when ratio comes in.
+            df = df.interpolate("linear", limit_direction="both").mean(axis=1)
+            fig2.add_trace(go.Scatter(x=df.index, y=df))
     else:
         raise NotImplementedError
     return fig2, fig1
