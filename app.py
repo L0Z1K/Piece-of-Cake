@@ -14,7 +14,7 @@ app = Dash(
 
 app.layout = html.Div(
     [
-        dcc.Store(id="my-chart-list", data=[], storage_type="local"),
+        dcc.Store(id="my-chart-list", data=[], storage_type="session"),
         dcc.Store(id="my-store", data=None),
         dcc.Location(id="url", refresh=False),
         # html.H1("Multi-page app with Dash Pages"),
