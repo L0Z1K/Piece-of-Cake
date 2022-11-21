@@ -34,6 +34,38 @@ layout = dbc.Container(
             clearable=False,
             multi=True,
         ),
+        html.Div(
+            [
+                dbc.Button("Buying Calculator", id="buying-calculator", n_clicks=0),
+                dbc.Offcanvas(
+                    html.Div(
+                        [
+                            html.P(
+                                [
+                                    "So, how do you buy stocks for this portfolio? 🤔",
+                                    html.Br(),
+                                    "It's hard to calculate one by one by yourself. 😭",
+                                    html.Br(),
+                                    "Let me help you! Just enter the amount of cash you have. 😄",
+                                ],
+                            ),
+                            dcc.Input(
+                                type="number",
+                                min=0,
+                                id="cash",
+                                placeholder="How much cash do you have?",
+                                style={"width": "100%"},
+                            ),
+                        ]
+                    ),
+                    id="offcanvas",
+                    title="Buying Calculator",
+                    is_open=False,
+                ),
+            ],
+            # align center
+            style={"textAlign": "center", "margin-top": "20px"},
+        ),
     ]
 )
 
@@ -58,3 +90,14 @@ def update_graph(input_values):
     else:
         whole_fig, ind_fig = draw_charts(input_values)
         return whole_fig, ind_fig
+
+
+@callback(
+    Output("offcanvas", "is_open"),
+    Input("buying-calculator", "n_clicks"),
+    [State("offcanvas", "is_open")],
+)
+def toggle_offcanvas(n1, is_open):
+    if n1:
+        return not is_open
+    return is_open
