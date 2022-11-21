@@ -41,3 +41,9 @@ def draw_charts(tickers, ratio=None):
     else:
         raise NotImplementedError
     return fig2, fig1
+
+
+def read_last_price(ticker: str):
+    data = yf.Ticker(ticker)
+    hist = data.history(period="1d")
+    return hist.Close.iloc[-1]
