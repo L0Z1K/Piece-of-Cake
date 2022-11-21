@@ -36,6 +36,9 @@ layout = dbc.Container(
             multi=True,
         ),
         html.Div(
+            id="slider",
+        ),
+        html.Div(
             [
                 dbc.Button("Buying Calculator", id="buying-calculator", n_clicks=0),
                 dbc.Offcanvas(
@@ -147,3 +150,28 @@ def update_buying_result(cash, input_values):
     else:
         result = buying_calculate(cash, input_values)
         return make_receipt(result)
+
+
+@callback(
+    Output("slider", "children"),
+    Input("my-list", "value"),
+)
+def update_slider(tickers):
+    if tickers is None:
+        raise PreventUpdate
+    else:
+        return [
+            html.Div(
+                [
+                    html.P(ticker),
+                    dcc.Slider(
+                        0,
+                        100,
+                        marks=None,
+                        value=100 // len(tickers),
+                        tooltip={"placement": "bottom", "always_visible": True},
+                    ),
+                ]
+            )
+            for ticker in tickers
+        ]
