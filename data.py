@@ -19,7 +19,7 @@ def draw_chart(ticker):
         return fig
 
 
-def draw_charts(tickers, ratio=None):
+def draw_charts(tickers, ratio={}):
     fig1 = go.Figure()
     fig2 = go.Figure()
     df = pd.DataFrame()
@@ -33,14 +33,13 @@ def draw_charts(tickers, ratio=None):
         hist[ticker] = price_to_percentage(np.array(hist.Close))
         df = df.merge(hist[["Date", ticker]], on="Date", how="left")
         fig1.add_trace(go.Scatter(x=hist.Date, y=hist[ticker], name=ticker))
-    if ratio is None:
-        if len(tickers) >= 1:
-            df.set_index("Date", inplace=True)
-            # should be changed when ratio comes in.
-            df = df.interpolate("linear", limit_direction="both").mean(axis=1)
-            fig2.add_trace(go.Scatter(x=df.index, y=df))
-    else:
-        raise NotImplementedError
+    if sum(ratio.values()) == 100 and len(tickers) >= 1:
+        df.set_index("Date", inplace=True)
+        # should be changed when ratio comes in.
+        for ticker in tickers:
+            df[ticker] = df[ticker] * ratio[ticker] / 100
+        df = df.interpolate("linear", limit_direction="both").sum(axis=1)
+        fig2.add_trace(go.Scatter(x=df.index, y=df))
     return fig2, fig1
 
 

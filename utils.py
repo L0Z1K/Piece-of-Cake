@@ -1,4 +1,4 @@
-from typing import List
+from typing import Dict
 
 from data import read_last_price
 
@@ -26,11 +26,11 @@ def format_number(num):
     return f"{str(num).rstrip('0').rstrip('.')}{sign}"
 
 
-def buying_calculate(cash: float, stocks: List[str]):
+def buying_calculate(cash: float, stocks: Dict[str, int]):
     result = {}
     remain = cash
-    each_cash = cash / len(stocks)
-    for stock in stocks:
+    for stock, ratio in stocks.items():
+        each_cash = cash * ratio / 100
         price = read_last_price(stock)
         cnt = each_cash // price
         ratio = cnt * price / cash * 100

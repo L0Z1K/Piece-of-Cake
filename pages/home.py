@@ -96,12 +96,13 @@ def update_chart_list(chart_list):
     Output("whole-graph", "figure"),
     Output("individual-graph", "figure"),
     Input("my-list", "value"),
+    Input("ratio-data", "data"),
 )
-def update_graph(input_values):
+def update_graph(input_values, ratios):
     if input_values is None:
         raise PreventUpdate
     else:
-        whole_fig, ind_fig = draw_charts(input_values)
+        whole_fig, ind_fig = draw_charts(input_values, ratios)
         return whole_fig, ind_fig
 
 
@@ -134,7 +135,7 @@ def make_receipt(result):
             [
                 dbc.Col(
                     html.H4(children=key),
-                    width=3,
+                    width=4,
                     # style={"width": "30%"},
                 ),
                 dbc.Col(
@@ -142,7 +143,7 @@ def make_receipt(result):
                         children=value,
                         style={"text-align": "right"},
                     ),
-                    width=7,
+                    width=6,
                     # style={"width": "70%"},
                 ),
             ],
@@ -162,10 +163,10 @@ def make_receipt(result):
 @callback(
     Output("buying-result", "children"),
     Input("cash", "value"),
-    Input("my-list", "value"),
+    Input("ratio-data", "data"),
 )
 def update_buying_result(cash, input_values):
-    if cash is None or input_values is None:
+    if cash is None or input_values == {}:
         raise PreventUpdate
     else:
         result = buying_calculate(cash, input_values)
