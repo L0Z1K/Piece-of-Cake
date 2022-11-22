@@ -1,4 +1,4 @@
-from typing import Dict
+from typing import Dict, List
 
 from data import read_last_price
 
@@ -37,4 +37,19 @@ def buying_calculate(cash: float, stocks: Dict[str, int]):
         result[stock] = f"{int(cnt):,} ({ratio:.1f}%)"
         remain -= cnt * price
     result["Cash"] = f"${remain:.2f} ({remain / cash * 100 :.1f})%"
+    return result
+
+
+def rebalance(stocks: Dict[str, int], ideal_ratio: List[int]):
+    total_cash = sum([read_last_price(stock) * cnt for stock, cnt in stocks.items()])
+    result = {}
+    remain = total_cash
+    for stock, ratio in zip(stocks.keys(), ideal_ratio):
+        each_cash = total_cash * ratio / 100
+        price = read_last_price(stock)
+        cnt = each_cash // price
+        ratio = cnt * price / total_cash * 100
+        result[stock] = f"{int(cnt):,} ({ratio:.1f}%)"
+        remain -= cnt * price
+    result["Cash"] = f"${remain:.2f} ({remain / total_cash * 100 :.1f})%"
     return result
