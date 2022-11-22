@@ -52,7 +52,6 @@ def update_figure(input_value):
     Input("my-submit-button", "n_clicks"),
 )
 def update_list(chart_list, new_input, n_clicks):
-    print(chart_list, new_input, n_clicks)
     if new_input is None:
         raise PreventUpdate
     else:
