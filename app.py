@@ -22,6 +22,9 @@ app.layout = html.Div(
             [
                 dbc.NavbarSimple(
                     children=[
+                        dbc.NavItem(
+                            dbc.NavLink("Rebalance", href="/rebalance", active=True)
+                        ),
                         dbc.Row(
                             [
                                 dbc.Col(
@@ -33,7 +36,7 @@ app.layout = html.Div(
                                 ),
                                 dbc.Col(
                                     dbc.Button(
-                                        "Search",
+                                        "🔍",
                                         id="my-button",
                                         href="/search",
                                         color="primary",
@@ -45,7 +48,7 @@ app.layout = html.Div(
                             ],
                             className="g-0 ms-auto flex-nowrap mt-3 mt-md-0",
                             align="center",
-                        )
+                        ),
                     ],
                     brand="Piece of Cake",
                     brand_href="/",
