@@ -44,12 +44,14 @@ def rebalance(stocks: Dict[str, int], ideal_ratio: List[int]):
     total_cash = sum([read_last_price(stock) * cnt for stock, cnt in stocks.items()])
     result = {}
     remain = total_cash
-    for stock, ratio in zip(stocks.keys(), ideal_ratio):
+    for (stock, prev_cnt), ratio in zip(stocks.items(), ideal_ratio):
         each_cash = total_cash * ratio / 100
         price = read_last_price(stock)
         cnt = each_cash // price
         ratio = cnt * price / total_cash * 100
-        result[stock] = f"{int(cnt):,} ({ratio:.1f}%)"
+        result[
+            stock
+        ] = f"{int(prev_cnt):,} → {int(cnt):,} ({int(cnt - prev_cnt)}, {ratio:.1f}%)"
         remain -= cnt * price
     result["Cash"] = f"${remain:.2f} ({remain / total_cash * 100 :.1f})%"
     return result
