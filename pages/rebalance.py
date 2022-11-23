@@ -63,13 +63,15 @@ def update_your_stock_list(values):
                 n_clicks=0,
                 id="rebalance-button",
                 style={"margin": "10px"},
-            )
+            ),
+            html.Div(id="rebalance-alert", style={"margin": "20px", "width": "50%"}),
         ],
     )
 
 
 @callback(
     Output("rebalance-result", "children"),
+    Output("rebalance-alert", "children"),
     Input("rebalance-button", "n_clicks"),
     State({"type": "r-slider-by-ticker", "index": ALL}, "id"),
     State({"type": "r-slider-by-ticker", "index": ALL}, "value"),
@@ -80,22 +82,29 @@ def rebalance_portfolio(n_clicks, ids, ideal_ratio, _ids, quantity):
     if n_clicks == 0:
         raise PreventUpdate
     else:
-        result = rebalance(
-            stocks={id["index"]: quantity[i] for i, id in enumerate(ids)},
-            ideal_ratio=ideal_ratio,
-        )
-        return html.Div(
-            [
-                dbc.Row(
+        if sum(ideal_ratio) != 100:
+            return None, dbc.Alert(["Total Value should be 100."], color="danger")
+        else:
+            result = rebalance(
+                stocks={id["index"]: quantity[i] for i, id in enumerate(ids)},
+                ideal_ratio=ideal_ratio,
+            )
+            return (
+                html.Div(
                     [
-                        dbc.Col(html.H4(children=k), width=2),
-                        dbc.Col(
-                            html.H4(children=v, style={"text-align": "right"}), width=4
-                        ),
-                    ],
-                    justify="between",
-                    style={"margin-bottom": "10px"},
-                )
-                for k, v in result.items()
-            ]
-        )
+                        dbc.Row(
+                            [
+                                dbc.Col(html.H4(children=k), width=2),
+                                dbc.Col(
+                                    html.H4(children=v, style={"text-align": "right"}),
+                                    width=4,
+                                ),
+                            ],
+                            justify="between",
+                            style={"margin-bottom": "10px"},
+                        )
+                        for k, v in result.items()
+                    ]
+                ),
+                None,
+            )
