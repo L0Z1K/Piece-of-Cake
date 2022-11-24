@@ -1,4 +1,5 @@
 from dash import Dash, html, dcc, Input, Output, State
+import os
 import dash
 import dash_bootstrap_components as dbc
 from dash.exceptions import PreventUpdate
@@ -74,4 +75,6 @@ def update_search_key(input_value, n_clicks):
 
 
 if __name__ == "__main__":
-    app.run_server(debug=True)
+    if "DASH_DEBUG" not in os.environ:
+        os.environ["DASH_DEBUG"] = "TRUE"
+    app.run_server(host="0.0.0.0")
