@@ -77,4 +77,4 @@ def update_search_key(input_value, n_clicks):
 if __name__ == "__main__":
     if "DASH_DEBUG" not in os.environ:
         os.environ["DASH_DEBUG"] = "TRUE"
-    app.run_server()
+    app.run_server(host="0.0.0.0")
