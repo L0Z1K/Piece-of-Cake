@@ -12,6 +12,8 @@ Piece-of-Cake is a website that allows you to visualize your investment portfoli
 
 **This is not completely finished yet. I am still working on it.**
 
+- 🔗 Demo Link: http://15.164.217.43/ (It can be terminated at any time because I simply deployed it on AWS EC2.)
+
 ## 🙋‍♂️ Target Audience
 
 -  Investors who want to visualize their portfolio
